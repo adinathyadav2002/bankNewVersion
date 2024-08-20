@@ -180,27 +180,27 @@ observer.observe(header);
 
 // SECTION ANIMATION
 
-// const obs2Callback = function (entries, observer) {
-//   const [entry] = entries;
+const obs2Callback = function (entries, observer) {
+  const [entry] = entries;
 
-//   if (!entry.isIntersecting ) return;
+  if (!entry.isIntersecting) return;
 
-//   entry.target.classList.remove("section--hidden");
+  entry.target.classList.remove("section--hidden");
 
-//   observer.unobserve(entry.target);
-// };
+  observer.unobserve(entry.target);
+};
 
-// const observer2 = new IntersectionObserver(obs2Callback, {
-//   root: null,
-//   threshold: 0.15,
-// });
+const observer2 = new IntersectionObserver(obs2Callback, {
+  root: null,
+  threshold: 0.15,
+});
 
-// sections.forEach(function (section) {
-//   // some users off their js from browser so
-//   // we have to use to js to hide the sections
-//   section.classList.add("section--hidden");
-//   observer2.observe(section);
-// });
+sections.forEach(function (section) {
+  // some users off their js from browser so
+  // we have to use to js to hide the sections
+  section.classList.add("section--hidden");
+  observer2.observe(section);
+});
 
 // LAZY IMAGES
 
@@ -242,23 +242,24 @@ const goToSlide = function () {
     slide.style.transform = `translate(${i * 100}%)`;
     i++;
   });
+  focus(-1 * curSlide);
 };
 
-const goPreSlide = function(){
+const goPreSlide = function () {
   curSlide++;
   if (curSlide == 1) {
     curSlide = -1 * (slides.length - 1);
   }
   goToSlide();
-}
+};
 
-const goNextSlide = function(){
+const goNextSlide = function () {
   curSlide--;
   if (curSlide == -1 * slides.length) {
     curSlide = 0;
   }
   goToSlide();
-}
+};
 
 const sliderBtnLeft = document.querySelector(".slider__btn--left");
 sliderBtnLeft.addEventListener("click", goPreSlide);
@@ -267,27 +268,36 @@ const sliderBtnRight = document.querySelector(".slider__btn--right");
 sliderBtnRight.addEventListener("click", goNextSlide);
 
 // KEYBOARD KEYS FOR LEFT AND RIGHT SCROLL
-document.addEventListener('keydown',function(e){
-  if(e.key=='ArrowLeft'){
+document.addEventListener("keydown", function (e) {
+  if (e.key == "ArrowLeft") {
     goPreSlide();
-  }else if(e.key=='ArrowRight'){
+  } else if (e.key == "ArrowRight") {
     goNextSlide();
   }
-})
+});
 
 // USING DOTS TO NAVIGATE THROUGH SLIDER
-const dotsContainer = document.querySelector('.dots');
-slides.forEach(function(_,i){
+const dotsContainer = document.querySelector(".dots");
+slides.forEach(function (_, i) {
   dotsContainer.insertAdjacentHTML(
     "beforeend",
     `<button class="dots__dot" data-slide="${i}"></button>`
   );
-})
+});
 
-dotsContainer.addEventListener('click', function(e){
-  if(!e.target.classList.contains('dots__dot'))return;
+dotsContainer.addEventListener("click", function (e) {
+  if (!e.target.classList.contains("dots__dot")) return;
   // curSlide = -1*Number(e.target.getAttribute("data-slide"));
-  const {slide} = e.target.dataset;
-  curSlide = -1*Number(slide);
+  const { slide } = e.target.dataset;
+  curSlide = -1 * Number(slide);
   goToSlide();
-})
+});
+
+const focus = function (dotNumber) {
+  const dots = document.querySelectorAll(".dots__dot");
+  dots.forEach(function (_, key) {
+    dots[key].classList.remove("dots__dot--active");
+  });
+  dots[dotNumber].classList.add("dots__dot--active");
+};
+focus(0);
